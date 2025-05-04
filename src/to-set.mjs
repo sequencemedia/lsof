@@ -2,6 +2,10 @@ import {
   getSet
 } from './common.mjs'
 
+/**
+ *  @param {string} value
+ *  @returns {Set<Set<Map<string, string | number>>>}
+ */
 export function toSet (value) {
   const outer = getSet(value)
 

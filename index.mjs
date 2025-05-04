@@ -22,6 +22,9 @@ export {
   toArray
 }
 
+/**
+ *  @returns {Promise<Set<Set<Map<string, string | number>>>>}
+ */
 export async function getLsofSet () {
   return (
     toSet(
@@ -30,6 +33,9 @@ export async function getLsofSet () {
   )
 }
 
+/**
+ *  @returns {Promise<Array<Array<Record<string, string | number>>>>}
+ */
 export async function getLsofArray () {
   return (
     toArray(

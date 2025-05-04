@@ -2,6 +2,7 @@ import {
   exec
 } from 'node:child_process'
 
+/*
 export function toCamelCase (value) {
   return value.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, v) => v.toUpperCase())
 }
@@ -13,7 +14,12 @@ export function fromTsv (string) {
       .reduce((a, c, i, [head]) => (i) ? a.concat(Object.fromEntries(c.map((val, col) => [head[col], val]))) : a, [])
   )
 }
+*/
 
+/**
+ *  @param {string} s
+ *  @returns {Record<string, number>}
+ */
 function getPid (s) {
   return {
     PROCESS: Number(s.slice(1))
@@ -32,6 +38,10 @@ i: will prefix the Node column
 n: will prefix the Name or (File Path)
 */
 
+/**
+ *  @param {string} s
+ *  @returns {Record<string, string | number>}
+ */
 function getCol (s) {
   const key = s.charAt(0)
   const value = s.slice(1)
@@ -84,10 +94,20 @@ function getCol (s) {
   }
 }
 
+/**
+ *  @param {string} [value]
+ *  @returns {Set<Set<Record<string, string | number>>>}
+ */
 export function getSet (value = '') {
   const array = value.split('\n')
 
+  /**
+   *  @type {Set<Set<Record<string, string | number>>>}
+   */
   const OUTER = new Set()
+  /**
+   *  @type {Set<Record<string, string | number>>}
+   */
   let INNER
 
   array
@@ -99,14 +119,23 @@ export function getSet (value = '') {
       }
     })
 
-  INNER = null
   return OUTER
 }
 
+/**
+ *  @param {string} [value]
+ *  @returns {Array<Array<Record<string, string | number>>>}
+ */
 export function getArray (value = '') {
   const array = value.split('\n')
 
+  /**
+   *  @type {Array<Array<Record<string, string | number>>>}
+   */
   const OUTER = []
+  /**
+   *  @type {Array<Record<string, string | number>>}
+   */
   let INNER
 
   array
@@ -118,7 +147,6 @@ export function getArray (value = '') {
       }
     })
 
-  INNER = null
   return OUTER
 }
 
@@ -126,18 +154,42 @@ const OPTIONS = {
   maxBuffer: Infinity
 }
 
+/**
+ *  @returns {Promise<string>}
+ */
 export function getLsof () {
   return (
     new Promise((resolve, reject) => {
-      exec('lsof -F pcuftDsin', OPTIONS, (e, v) => (!e) ? resolve(v.trim()) : reject(e))
+      /**
+       *  @param {any} [e]
+       *  @param {string} [v]
+       *  @returns {void}
+       */
+      function complete (e, v = '') {
+        return (!e) ? resolve(v.trim()) : reject(e)
+      }
+
+      exec('lsof -F pcuftDsin', OPTIONS, complete)
     })
   )
 }
 
+/**
+ *  @returns {Promise<string>}
+ */
 export function lsof () {
   return (
     new Promise((resolve, reject) => {
-      exec('lsof', OPTIONS, (e, v) => (!e) ? resolve(v.trim()) : reject(e))
+      /**
+       *  @param {any} [e]
+       *  @param {string} [v]
+       *  @returns {void}
+       */
+      function complete (e, v = '') {
+        return (!e) ? resolve(v.trim()) : reject(e)
+      }
+
+      exec('lsof', OPTIONS, complete)
     })
   )
 }
