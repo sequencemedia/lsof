@@ -8,7 +8,7 @@ npm i -P @sequencemedia/lsof
 
 ## Usage
 
-Get `lsof` output as a string
+Get `lsof` as a string
 
 ```javascript
 import {
