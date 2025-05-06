@@ -1,5 +1,5 @@
 import {
-  getArray,
+  getRows,
   toObject
 } from './common.mjs'
 
@@ -8,7 +8,7 @@ import {
  *  @returns {Array<Record<string, string | number>>}
  */
 export default function toArray (value) {
-  const array = getArray(value)
+  const array = getRows(value)
 
   return (
     array.map(toObject)

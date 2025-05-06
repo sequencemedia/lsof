@@ -56,11 +56,29 @@ export function fromTsv (string) {
 
 /**
  *  @param {string} s
+ *  @returns {number | string}
+ */
+function transform (s) {
+  if (!s) return s
+
+  const n = Number(s)
+
+  return (
+    isNaN(n)
+      ? s
+      : n
+  )
+}
+
+/**
+ *  @param {string} s
  *  @returns {Record<string, number>}
  */
 function getPid (s) {
+  const pid = s.slice(1).trim()
+
   return {
-    pid: Number(s.slice(1))
+    [PID]: Number(pid)
   }
 }
 
@@ -70,29 +88,25 @@ function getPid (s) {
  */
 function getCol (s) {
   const key = s.charAt(0)
-  const value = s.slice(1)
+  const value = s.slice(1).trim()
 
   switch (key) {
-    case COMMAND_FLAG: // will prefix the COMMAND or (Process Name) column
+    case COMMAND_FLAG: // will prefix the Command or (Process Name) column
       return {
         [COMMAND]: value
       }
 
-    case USER_FLAG: // will prefix the User column that the process is running under
+    case USER_FLAG: // will prefix the User column
       return {
         [USER]: value
       }
 
     case FD_FLAG: // will prefix the File Descriptor column
-    {
-      const fd = Number(value)
-
       return {
-        [FD]: isNaN(fd) ? value : fd
+        [FD]: transform(value)
       }
-    }
 
-    case TYPE_FLAG: // will prefix the type column
+    case TYPE_FLAG: // will prefix the Type column
       return {
         [TYPE]: value
       }
@@ -103,22 +117,14 @@ function getCol (s) {
       }
 
     case SIZEOFF_FLAG: // will prefix the SizeOff column
-    {
-      const sizeOff = Number(value)
-
       return {
-        [SIZEOFF]: isNaN(sizeOff) ? value : sizeOff
+        [SIZEOFF]: transform(value)
       }
-    }
 
     case NODE_FLAG: // will prefix the Node column
-    {
-      const node = Number(value)
-
       return {
-        [NODE]: isNaN(node) ? value : node
+        [NODE]: transform(value)
       }
-    }
 
     case NAME_FLAG: // will prefix the Name or (File Path)
       return {
@@ -126,13 +132,9 @@ function getCol (s) {
       }
 
     default:
-    {
-      const number = Number(value)
-
       return {
-        [key]: isNaN(number) ? value : number
+        [key]: transform(value)
       }
-    }
   }
 }
 
@@ -154,7 +156,7 @@ export function getSet (value = '') {
 
   array
     .forEach((s) => {
-      if (s.charAt(0) === PID_FLAG) {
+      if (s.startsWith(PID_FLAG)) {
         OUTER.add((INNER = new Set([getPid(s)])))
       } else {
         INNER.add(getCol(s))
@@ -182,7 +184,35 @@ export function getArray (value = '') {
 
   array
     .forEach((s) => {
-      if (s.charAt(0) === PID_FLAG) {
+      if (s.startsWith(PID_FLAG)) {
+        OUTER.push((INNER = [getPid(s)]))
+      } else {
+        INNER.push(getCol(s))
+      }
+    })
+
+  return OUTER
+}
+
+/**
+ *  @param {string} [value]
+ *  @returns {Array<Array<Record<string, string | number>>>}
+ */
+export function getRows (value = '') {
+  const array = value.split(LF)
+
+  /**
+   *  @type {Array<Array<Record<string, string | number>>>}
+   */
+  const OUTER = []
+  /**
+   *  @type {Array<Record<string, string | number>>}
+   */
+  let INNER
+
+  array
+    .forEach((s) => {
+      if (s.startsWith(PID_FLAG)) {
         OUTER.push((INNER = [getPid(s)]))
       } else {
         INNER.push(getCol(s))

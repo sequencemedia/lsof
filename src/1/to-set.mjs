@@ -2,18 +2,18 @@ import {
   PID,
   COMMAND,
   USER,
-  getSet
+  getRows
 } from './common.mjs'
 
 /**
- *  @param {Map<string, string | number>} map
+ *  @param {Map<string, string | number>} previous
  *  @param  {...Array<string | number>} args
  *  @returns {Array<Array<string | number>>}
  */
-function toEntries (map, ...args) {
-  const pid = map.get(PID)
-  const command = map.get(COMMAND)
-  const user = map.get(USER)
+function toEntries (previous, ...args) {
+  const pid = previous.get(PID)
+  const command = previous.get(COMMAND)
+  const user = previous.get(USER)
 
   return [
     [
@@ -38,7 +38,7 @@ function toEntries (map, ...args) {
  */
 function map (inner) {
   return (
-    new Set(Array.from(inner).reduce(reduce, [new Map()]))
+    new Set(inner.reduce(reduce, [new Map()]))
   )
 }
 
@@ -71,9 +71,9 @@ function reduce (accumulator, current) {
  *  @returns {Set<Set<Map<string, string | number>>>}
  */
 export default function toSet (value) {
-  const outer = getSet(value)
+  const outer = getRows(value)
 
   return (
-    new Set(Array.from(outer).map(map))
+    new Set(outer.map(map))
   )
 }

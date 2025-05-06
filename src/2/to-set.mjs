@@ -1,5 +1,5 @@
 import {
-  getArray,
+  getRows,
   toObject
 } from './common.mjs'
 
@@ -20,7 +20,7 @@ function toMap (value) {
  *  @returns {Set<Map<string, string | number>>}
  */
 export default function toSet (value) {
-  const array = getArray(value)
+  const array = getRows(value)
 
   return (
     new Set(array.map(toMap))

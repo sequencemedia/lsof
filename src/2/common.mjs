@@ -35,16 +35,8 @@ const OPTIONS = {
 }
 
 /**
- *  @param {string} v
- *  @returns {string[]}
- */
-export function getArray (v) {
-  return v.trim().split(LF).slice(1)
-}
-
-/**
- * @param {string} string
- * @returns {number | string}
+ *  @param {string} string
+ *  @returns {number | string}
  */
 function transform (string) {
   const s = string.trim()
@@ -56,6 +48,14 @@ function transform (string) {
       ? s
       : n
   )
+}
+
+/**
+ *  @param {string} v
+ *  @returns {string[]}
+ */
+export function getRows (v) {
+  return v.trim().split(LF).slice(1)
 }
 
 /**
@@ -73,9 +73,9 @@ export function toObject (v) {
     } = {}
   } = match
 
-  const pid = Number(PID)
+  const pid = transform(PID)
 
-  if (isNaN(pid)) throw new Error('Invalid pid.')
+  if (typeof pid === 'string') throw new Error('Invalid pid.')
 
   const {
     groups: {

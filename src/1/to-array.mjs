@@ -2,7 +2,7 @@ import {
   PID,
   COMMAND,
   USER,
-  getArray
+  getRows
 } from './common.mjs'
 
 /**
@@ -10,7 +10,13 @@ import {
  *  @param {...Array<string | number>} args
  *  @returns {Array<Array<string | number>>}
  */
-function toEntries ({ pid, command, user }, ...args) {
+function toEntries (previous, ...args) {
+  const {
+    [PID]: pid,
+    [COMMAND]: command,
+    [USER]: user
+  } = previous
+
   return [
     [
       PID,
@@ -67,7 +73,7 @@ function reduce (accumulator, current) {
  *  @returns {Array<Array<Record<string, string | number>>>}
  */
 export default function toArray (value) {
-  const outer = getArray(value)
+  const outer = getRows(value)
 
   return (
     outer.map(map)
