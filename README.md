@@ -1,6 +1,6 @@
 # `@sequencemedia/lsof`
 
-Get a list of open files in a convenient JS structure
+Get a list of open files in a convenient structure
 
 ```bash
 npm i -P @sequencemedia/lsof
