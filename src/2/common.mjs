@@ -23,7 +23,7 @@ export const NAME = 'name'
  *    sizeOff: string | number,
  *    node: string | number,
  *    name: string
- *  }} LineType
+ *  }} ProcessDescriptorType
  */
 
 const PATTERN = /^\s*(?<command>[!-~]+)\s+(?<pid>\d+)\s+(?<user>\w+)\s+(?<fd>\s+|\w+)\s+(?<type>\s+|\w+)\s+(?<device>\s+|\d+,\d+|0x[\w\d]*)\s+(?<sizeOff>\s+|\w+|\d+)\s+(?<node>\s+|\d+)\s+(?<name>.*)/
@@ -115,7 +115,7 @@ export function getLsof () {
        *  @returns {void}
        */
       function complete (e, v = '') {
-        return (!e) ? resolve(v.trim()) : reject(e)
+        return (!e) ? resolve(v) : reject(e)
       }
 
       execFile('lsof', OPTIONS, complete)

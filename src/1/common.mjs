@@ -143,7 +143,7 @@ function getCol (s) {
  *  @returns {Set<Set<Record<string, string | number>>>}
  */
 export function getSet (value = '') {
-  const array = value.split(LF)
+  const array = value.trim().split(LF)
 
   /**
    *  @type {Set<Set<Record<string, string | number>>>}
@@ -171,7 +171,7 @@ export function getSet (value = '') {
  *  @returns {Array<Array<Record<string, string | number>>>}
  */
 export function getArray (value = '') {
-  const array = value.split(LF)
+  const array = value.trim().split(LF)
 
   /**
    *  @type {Array<Array<Record<string, string | number>>>}
@@ -199,7 +199,7 @@ export function getArray (value = '') {
  *  @returns {Array<Array<Record<string, string | number>>>}
  */
 export function getRows (value = '') {
-  const array = value.split(LF)
+  const array = value.trim().split(LF)
 
   /**
    *  @type {Array<Array<Record<string, string | number>>>}
@@ -234,7 +234,7 @@ export function getLsof () {
        *  @returns {void}
        */
       function complete (e, v = '') {
-        return (!e) ? resolve(v.trim()) : reject(e)
+        return (!e) ? resolve(v) : reject(e)
       }
 
       execFile('lsof', ['-F', 'pcuftDsin'], OPTIONS, complete)
