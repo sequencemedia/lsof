@@ -2,6 +2,18 @@ import {
   execFile
 } from 'node:child_process'
 
+export const PID = 'pid'
+export const COMMAND = 'command'
+export const USER = 'user'
+export const FD = 'fd'
+export const TYPE = 'type'
+export const DEVICE = 'device'
+export const SIZEOFF = 'sizeOff'
+export const NODE = 'node'
+export const NAME = 'name'
+
+const LF = '\n'
+
 /*
 export function toCamelCase (value) {
   return value.toLowerCase().replace(/[^a-zA-Z0-9]+(.)/g, (m, v) => v.toUpperCase())
@@ -9,7 +21,7 @@ export function toCamelCase (value) {
 
 export function fromTsv (string) {
   return (
-    string.replace(/\r/g, '\n').split('\n')
+    string.replace(/\r/g, LF).split(LF)
       .map((l) => l.split('\t'))
       .reduce((a, c, i, [head]) => (i) ? a.concat(Object.fromEntries(c.map((val, col) => [head[col], val]))) : a, [])
   )
@@ -49,12 +61,12 @@ function getCol (s) {
   switch (key) {
     case 'c': // will prefix the COMMAND or (Process Name) column
       return {
-        command: value
+        [COMMAND]: value
       }
 
     case 'u': // will prefix the User column that the process is running under
       return {
-        user: value
+        [USER]: value
       }
 
     case 'f': // will prefix the File Descriptor column
@@ -62,18 +74,18 @@ function getCol (s) {
       const fd = Number(value)
 
       return {
-        fd: isNaN(fd) ? value : fd
+        [FD]: isNaN(fd) ? value : fd
       }
     }
 
     case 't': // will prefix the type column
       return {
-        type: value
+        [TYPE]: value
       }
 
     case 'D': // will prefix the Device column
       return {
-        device: value
+        [DEVICE]: value
       }
 
     case 's': // will prefix the SizeOff column
@@ -81,7 +93,7 @@ function getCol (s) {
       const sizeOff = Number(value)
 
       return {
-        sizeOff: isNaN(sizeOff) ? value : sizeOff
+        [SIZEOFF]: isNaN(sizeOff) ? value : sizeOff
       }
     }
 
@@ -90,13 +102,13 @@ function getCol (s) {
       const node = Number(value)
 
       return {
-        node: isNaN(node) ? value : node
+        [NODE]: isNaN(node) ? value : node
       }
     }
 
     case 'n': // will prefix the Name or (File Path)
       return {
-        name: value
+        [NAME]: value
       }
 
     default:
@@ -115,7 +127,7 @@ function getCol (s) {
  *  @returns {Set<Set<Record<string, string | number>>>}
  */
 export function getSet (value = '') {
-  const array = value.split('\n')
+  const array = value.split(LF)
 
   /**
    *  @type {Set<Set<Record<string, string | number>>>}
@@ -143,7 +155,7 @@ export function getSet (value = '') {
  *  @returns {Array<Array<Record<string, string | number>>>}
  */
 export function getArray (value = '') {
-  const array = value.split('\n')
+  const array = value.split(LF)
 
   /**
    *  @type {Array<Array<Record<string, string | number>>>}

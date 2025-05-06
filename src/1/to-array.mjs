@@ -1,4 +1,7 @@
 import {
+  PID,
+  COMMAND,
+  USER,
   getArray
 } from './common.mjs'
 
@@ -10,19 +13,29 @@ import {
 function toEntries ({ pid, command, user }, ...args) {
   return [
     [
-      'pid',
+      PID,
       pid
     ],
     [
-      'command',
+      COMMAND,
       command
     ],
     [
-      'user',
+      USER,
       user
     ],
     ...args
   ]
+}
+
+/**
+ *  @param {Record<string, string | number>[]} inner
+ *  @returns {Array<Record<string, string | number>>}
+ */
+function map (inner) {
+  return (
+    inner.reduce(reduce, [{}])
+  )
 }
 
 /**
@@ -57,6 +70,6 @@ export default function toArray (value) {
   const outer = getArray(value)
 
   return (
-    outer.map((inner) => inner.reduce(reduce, [{}]))
+    outer.map(map)
   )
 }

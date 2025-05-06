@@ -2,19 +2,29 @@ import {
   execFile
 } from 'node:child_process'
 
+export const PID = 'pid'
+export const COMMAND = 'command'
+export const USER = 'user'
+export const FD = 'fd'
+export const TYPE = 'type'
+export const DEVICE = 'device'
+export const SIZEOFF = 'sizeOff'
+export const NODE = 'node'
+export const NAME = 'name'
+
 /**
  *  @typedef {{
-*    command: string,
-*    pid: number,
-*    user: string,
-*    fd: string | number,
-*    type: string,
-*    device: string,
-*    sizeOff: string | number,
-*    node: string | number,
-*    name: string
-*  }} LineType
-*/
+ *    command: string,
+ *    pid: number,
+ *    user: string,
+ *    fd: string | number,
+ *    type: string,
+ *    device: string,
+ *    sizeOff: string | number,
+ *    node: string | number,
+ *    name: string
+ *  }} LineType
+ */
 
 const PATTERN = /^\s*(?<command>[!-~]+)\s+(?<pid>\d+)\s+(?<user>\w+)\s+(?<fd>\s+|\w+)\s+(?<type>\s+|\w+)\s+(?<device>\s+|\d+,\d+|0x[\w\d]*)\s+(?<sizeOff>\s+|\w+|\d+)\s+(?<node>\s+|\d+)\s+(?<name>.*)/
 
@@ -26,6 +36,20 @@ const LF = '\n'
  */
 export function getArray (v) {
   return v.trim().split(LF).slice(1)
+}
+
+/**
+ * @param {string} string
+ * @returns {number | string}
+ */
+function transform (string) {
+  const number = Number(string)
+
+  return (
+    isNaN(number)
+      ? string.trim()
+      : number
+  )
 }
 
 /**
@@ -49,30 +73,26 @@ export function toObject (v) {
 
   const {
     groups: {
-      command,
-      user,
-      fd: FD,
-      type,
-      device,
-      sizeOff: SIZEOFF,
-      node: NODE,
-      name
+      [COMMAND]: command,
+      [USER]: user,
+      [FD]: fd,
+      [TYPE]: type,
+      [DEVICE]: device,
+      [SIZEOFF]: sizeOff,
+      [NODE]: node,
+      [NAME]: name
     } = {}
   } = match
-
-  const fd = Number(FD)
-  const sizeOff = Number(SIZEOFF)
-  const node = Number(NODE)
 
   return {
     pid,
     command,
     user,
-    fd: isNaN(fd) ? FD.trim() : fd,
+    fd: transform(fd),
     type,
     device,
-    sizeOff: isNaN(sizeOff) ? SIZEOFF.trim() : sizeOff,
-    node: isNaN(node) ? NODE.trim() : node,
+    sizeOff: transform(sizeOff),
+    node: transform(node),
     name
   }
 }

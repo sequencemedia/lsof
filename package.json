@@ -1,6 +1,10 @@
 {
   "name": "@sequencemedia/lsof",
   "version": "0.0.6",
+  "keywords": [
+    "lsof",
+    "list open files"
+  ],
   "main": "./index.mjs",
   "type": "module",
   "author": {

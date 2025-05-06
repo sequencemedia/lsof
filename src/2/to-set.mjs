@@ -7,9 +7,11 @@ import {
  *  @param {string} value
  *  @returns {Map<string, string | number>}
  */
-function mapMap (value) {
+function toMap (value) {
+  const object = toObject(value)
+
   return (
-    new Map(Object.entries(toObject(value)))
+    new Map(Object.entries(object))
   )
 }
 
@@ -21,6 +23,6 @@ export default function toSet (value) {
   const array = getArray(value)
 
   return (
-    new Set(array.map(mapMap))
+    new Set(array.map(toMap))
   )
 }
