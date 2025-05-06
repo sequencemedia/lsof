@@ -7,19 +7,19 @@ import {
  *  @param {...Array<string | number>} args
  *  @returns {Array<Array<string | number>>}
  */
-function toEntries ({ PROCESS, COMMAND, USER }, ...args) {
+function toEntries ({ pid, command, user }, ...args) {
   return [
     [
-      'PROCESS',
-      PROCESS
+      'pid',
+      pid
     ],
     [
-      'COMMAND',
-      COMMAND
+      'command',
+      command
     ],
     [
-      'USER',
-      USER
+      'user',
+      user
     ],
     ...args
   ]
@@ -53,7 +53,7 @@ function reduce (accumulator, current) {
  *  @param {string} value
  *  @returns {Array<Array<Record<string, string | number>>>}
  */
-export function toArray (value) {
+export default function toArray (value) {
   const outer = getArray(value)
 
   return (

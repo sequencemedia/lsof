@@ -6,7 +6,7 @@ import {
  *  @param {string} value
  *  @returns {Set<Set<Map<string, string | number>>>}
  */
-export function toSet (value) {
+export default function toSet (value) {
   const outer = getSet(value)
 
   return (
@@ -28,22 +28,22 @@ export function toSet (value) {
                 ] = Object.entries(current)
 
                 if (map.has(key)) {
-                  const process = map.get('PROCESS')
-                  const command = map.get('COMMAND')
-                  const user = map.get('USER')
+                  const pid = map.get('pid')
+                  const command = map.get('command')
+                  const user = map.get('user')
 
                   accumulator.push(
                     new Map([
                       [
-                        'PROCESS',
-                        process
+                        'pid',
+                        pid
                       ],
                       [
-                        'COMMAND',
+                        'command',
                         command
                       ],
                       [
-                        'USER',
+                        'user',
                         user
                       ],
                       [

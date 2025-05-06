@@ -1,5 +1,5 @@
 import {
-  exec
+  execFile
 } from 'node:child_process'
 
 /*
@@ -22,7 +22,7 @@ export function fromTsv (string) {
  */
 function getPid (s) {
   return {
-    PROCESS: Number(s.slice(1))
+    pid: Number(s.slice(1))
   }
 }
 
@@ -49,48 +49,64 @@ function getCol (s) {
   switch (key) {
     case 'c': // will prefix the COMMAND or (Process Name) column
       return {
-        COMMAND: value
+        command: value
       }
 
     case 'u': // will prefix the User column that the process is running under
       return {
-        USER: value
+        user: value
       }
 
     case 'f': // will prefix the File Descriptor column
+    {
+      const fd = Number(value)
+
       return {
-        'FILE DESCRIPTOR': value
+        fd: isNaN(fd) ? value : fd
       }
+    }
 
     case 't': // will prefix the type column
       return {
-        TYPE: value
+        type: value
       }
 
     case 'D': // will prefix the Device column
       return {
-        DEVICE: value
+        device: value
       }
 
     case 's': // will prefix the SizeOff column
+    {
+      const sizeOff = Number(value)
+
       return {
-        SIZE: Number(value)
+        sizeOff: isNaN(sizeOff) ? value : sizeOff
       }
+    }
 
     case 'i': // will prefix the Node column
+    {
+      const node = Number(value)
+
       return {
-        NODE: Number(value)
+        node: isNaN(node) ? value : node
       }
+    }
 
     case 'n': // will prefix the Name or (File Path)
       return {
-        'FILE PATH': value
+        name: value
       }
 
     default:
+    {
+      const number = Number(value)
+
       return {
-        [key]: value
+        [key]: isNaN(number) ? value : number
       }
+    }
   }
 }
 
@@ -169,27 +185,7 @@ export function getLsof () {
         return (!e) ? resolve(v.trim()) : reject(e)
       }
 
-      exec('lsof -F pcuftDsin', OPTIONS, complete)
-    })
-  )
-}
-
-/**
- *  @returns {Promise<string>}
- */
-export function lsof () {
-  return (
-    new Promise((resolve, reject) => {
-      /**
-       *  @param {any} [e]
-       *  @param {string} [v]
-       *  @returns {void}
-       */
-      function complete (e, v = '') {
-        return (!e) ? resolve(v.trim()) : reject(e)
-      }
-
-      exec('lsof', OPTIONS, complete)
+      execFile('lsof', ['-F', 'pcuftDsin'], OPTIONS, complete)
     })
   )
 }
