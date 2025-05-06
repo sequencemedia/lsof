@@ -11,7 +11,7 @@
   "license": "ISC",
   "repository": {
     "type": "git",
-    "url": "git://github.com/sequencemedia/lsof.git"
+    "url": "git+https://github.com/sequencemedia/lsof.git"
   },
   "scripts": {
     "lint": "eslint .",
