@@ -30,6 +30,10 @@ const PATTERN = /^\s*(?<command>[!-~]+)\s+(?<pid>\d+)\s+(?<user>\w+)\s+(?<fd>\s+
 
 const LF = '\n'
 
+const OPTIONS = {
+  maxBuffer: Infinity
+}
+
 /**
  *  @param {string} v
  *  @returns {string[]}
@@ -43,12 +47,14 @@ export function getArray (v) {
  * @returns {number | string}
  */
 function transform (string) {
-  const number = Number(string)
+  const s = string.trim()
+  if (!s) return s
 
+  const n = Number(s)
   return (
-    isNaN(number)
-      ? string.trim()
-      : number
+    isNaN(n)
+      ? s
+      : n
   )
 }
 
@@ -95,10 +101,6 @@ export function toObject (v) {
     node: transform(node),
     name
   }
-}
-
-const OPTIONS = {
-  maxBuffer: Infinity
 }
 
 /**

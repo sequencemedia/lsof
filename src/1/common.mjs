@@ -2,6 +2,28 @@ import {
   execFile
 } from 'node:child_process'
 
+/*
+p: will prefix the PID or (Process ID) column
+c: will prefix the Command or (Process Name) column
+u: will prefix the User column
+f: will prefix the File Descriptor column
+t: will prefix the Type column
+D: will prefix the Device column
+s: will prefix the SizeOff column
+i: will prefix the Node column
+n: will prefix the Name or (File Path)
+*/
+
+const PID_FLAG = 'p'
+const COMMAND_FLAG = 'c'
+const USER_FLAG = 'u'
+const FD_FLAG = 'f'
+const TYPE_FLAG = 't'
+const DEVICE_FLAG = 'D'
+const SIZEOFF_FLAG = 's'
+const NODE_FLAG = 'i'
+const NAME_FLAG = 'n'
+
 export const PID = 'pid'
 export const COMMAND = 'command'
 export const USER = 'user'
@@ -13,6 +35,10 @@ export const NODE = 'node'
 export const NAME = 'name'
 
 const LF = '\n'
+
+const OPTIONS = {
+  maxBuffer: Infinity
+}
 
 /*
 export function toCamelCase (value) {
@@ -38,18 +64,6 @@ function getPid (s) {
   }
 }
 
-/*
-p: will prefix the PID or (Process ID) column
-c: will prefix the COMMAND or (Process Name) column
-u: will prefix the User column that the process is running under
-f: will prefix the File Descriptor column
-t: will prefix the type column
-D: will prefix the Device column
-s: will prefix the SizeOff column
-i: will prefix the Node column
-n: will prefix the Name or (File Path)
-*/
-
 /**
  *  @param {string} s
  *  @returns {Record<string, string | number>}
@@ -59,17 +73,17 @@ function getCol (s) {
   const value = s.slice(1)
 
   switch (key) {
-    case 'c': // will prefix the COMMAND or (Process Name) column
+    case COMMAND_FLAG: // will prefix the COMMAND or (Process Name) column
       return {
         [COMMAND]: value
       }
 
-    case 'u': // will prefix the User column that the process is running under
+    case USER_FLAG: // will prefix the User column that the process is running under
       return {
         [USER]: value
       }
 
-    case 'f': // will prefix the File Descriptor column
+    case FD_FLAG: // will prefix the File Descriptor column
     {
       const fd = Number(value)
 
@@ -78,17 +92,17 @@ function getCol (s) {
       }
     }
 
-    case 't': // will prefix the type column
+    case TYPE_FLAG: // will prefix the type column
       return {
         [TYPE]: value
       }
 
-    case 'D': // will prefix the Device column
+    case DEVICE_FLAG: // will prefix the Device column
       return {
         [DEVICE]: value
       }
 
-    case 's': // will prefix the SizeOff column
+    case SIZEOFF_FLAG: // will prefix the SizeOff column
     {
       const sizeOff = Number(value)
 
@@ -97,7 +111,7 @@ function getCol (s) {
       }
     }
 
-    case 'i': // will prefix the Node column
+    case NODE_FLAG: // will prefix the Node column
     {
       const node = Number(value)
 
@@ -106,7 +120,7 @@ function getCol (s) {
       }
     }
 
-    case 'n': // will prefix the Name or (File Path)
+    case NAME_FLAG: // will prefix the Name or (File Path)
       return {
         [NAME]: value
       }
@@ -140,7 +154,7 @@ export function getSet (value = '') {
 
   array
     .forEach((s) => {
-      if (s.charAt(0) === 'p') {
+      if (s.charAt(0) === PID_FLAG) {
         OUTER.add((INNER = new Set([getPid(s)])))
       } else {
         INNER.add(getCol(s))
@@ -168,7 +182,7 @@ export function getArray (value = '') {
 
   array
     .forEach((s) => {
-      if (s.charAt(0) === 'p') {
+      if (s.charAt(0) === PID_FLAG) {
         OUTER.push((INNER = [getPid(s)]))
       } else {
         INNER.push(getCol(s))
@@ -176,10 +190,6 @@ export function getArray (value = '') {
     })
 
   return OUTER
-}
-
-const OPTIONS = {
-  maxBuffer: Infinity
 }
 
 /**
