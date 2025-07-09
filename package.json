@@ -26,7 +26,7 @@
     "husky": "^9.1.7"
   },
   "devDependencies": {
-    "@sequencemedia/eslint-config-standard": "^0.2.69",
+    "@sequencemedia/eslint-config-standard": "^0.2.70",
     "@sequencemedia/eslint-config-typescript": "^0.1.117",
     "@types/node": "^24.0.10",
     "eslint": "^9.30.1",
