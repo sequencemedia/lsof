@@ -30,7 +30,7 @@
     "@sequencemedia/eslint-config-typescript": "^0.1.138",
     "@types/node": "^24.3.1",
     "eslint": "^9.35.0",
-    "globals": "^16.3.0"
+    "globals": "^16.4.0"
   },
   "exports": {
     ".": "./index.mjs",
