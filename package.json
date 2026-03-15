@@ -1,6 +1,6 @@
 {
   "name": "@sequencemedia/lsof",
-  "version": "0.0.123",
+  "version": "0.0.124",
   "keywords": [
     "lsof",
     "list open files"
