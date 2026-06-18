@@ -20,7 +20,7 @@
   "scripts": {
     "lint": "eslint .",
     "lint:fix": "npm run lint -- --fix",
-    "prepare": "husky"
+    "prepare": "node husky.mjs"
   },
   "dependencies": {
     "husky": "^9.1.7"
